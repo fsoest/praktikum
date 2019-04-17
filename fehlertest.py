@@ -1,4 +1,3 @@
-import sympy as sym
 from fehler import fehler_berechnen
 
 # Messgroessen: 'Variable': (Wert, stat_Fehler, syst_Fehler)
@@ -11,9 +10,6 @@ messgroessen = {
     'Z_110_r': (40967.32185647546, 1294.5673706646246, 0),
 }
 
-#var_init(messgroessen)
-
 Ag = "h_107 * (Z_108_m / Z_108_r) + h_109 * (Z_110_m / Z_110_r)"
-#var_init(messgroessen, ag)
 
 print(fehler_berechnen("Silbergehalt", Ag, messgroessen))
