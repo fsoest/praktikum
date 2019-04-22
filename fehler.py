@@ -1,32 +1,40 @@
 import sympy as sym
 
 
-def fehler_berechnen(VarName, function_str, messgroessen):
-    syst_fehler = 0
-    stat_fehler = 0
+def error_calc(var_name, function_str, measurement):
+    syst_error = 0
+    stat_error = 0
     subs = []
 
     # Variableninitialisierung
-    for key in messgroessen.keys():
+    for key in measurement.keys():
         exec("{0} = sym.Symbol('{0}')".format(key))
-        subs.append((key, messgroessen.get(key)[0]))
+        subs.append((key, measurement.get(key)[0]))
 
+    # Berechnung Funktionswert
     function = eval(function_str)
-    Value = function.subs(subs)
+    value = function.subs(subs)
 
-    for val in messgroessen.keys():
+    # Gausssche Fehlerfortpflanzung
+    for val in measurement.keys():
         var = sym.Symbol(val)
         deriv = sym.diff(function, var).subs(subs)
-        stat_fehler += (deriv * messgroessen.get(val)[1])**2
-        syst_fehler += (deriv * messgroessen.get(val)[2])**2
-    syst_fehler = sym.sqrt(syst_fehler)
-    stat_fehler = sym.sqrt(stat_fehler)
+        stat_error += (deriv * measurement.get(val)[1])**2
+        syst_error += (deriv * measurement.get(val)[2])**2
+    syst_error = sym.sqrt(syst_error)
+    stat_error = sym.sqrt(stat_error)
+    stat_rel = stat_error / value * 100
+    syst_rel = syst_error / value * 100
 
-    fehler = {
-        'Name': VarName,
-        'Wert': Value,
-        'stat': stat_fehler,
-        'syst': syst_fehler
+    error = {
+        'Name': var_name,
+        'Value': value.evalf(),
+        'stat': stat_error.evalf(),
+        'stat_rel [%]': stat_rel.evalf(),
+        'syst': syst_error.evalf(),
+        'syst_rel [%]': syst_rel.evalf(),
     }
 
-    return fehler
+    for key in error.keys():
+        print('{0}: {1}'.format(key, error.get(key)))
+        print()
