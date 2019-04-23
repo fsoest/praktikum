@@ -9,3 +9,5 @@ messgroessen = {
 Ag = "x / (x + y)"
 
 error_calc("Silbergehalt", Ag, messgroessen)
+
+print(error_calc("Silber", Ag, messgroessen).get('stat_rel [%]'))
