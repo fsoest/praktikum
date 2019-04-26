@@ -38,3 +38,5 @@ def error_calc(var_name, function_str, measurement):
     for key in error.keys():
         print('{0}: {1}'.format(key, error.get(key)))
         print()
+
+    return error
